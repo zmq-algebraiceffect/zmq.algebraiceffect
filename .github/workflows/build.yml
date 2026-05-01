@@ -12,8 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Convert SSH to HTTPS for submodules
-        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+      - name: Configure git for private submodules
+        run: |
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          git config --global "http.${GITHUB_SERVER_URL#https://}.extraheader" "AUTHORIZATION: basic $(echo -n "x-access-token:${{ secrets.GITHUB_TOKEN }}" | base64)"
 
       - name: Checkout submodules
         run: git submodule update --init --recursive
@@ -35,8 +37,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Convert SSH to HTTPS for submodules
-        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+      - name: Configure git for private submodules
+        shell: pwsh
+        run: |
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          $token = [Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes("x-access-token:${{ env:GITHUB_TOKEN }}"))
+          git config --global "http.https://github.com.extraheader" "AUTHORIZATION: basic $token"
 
       - name: Checkout submodules
         run: git submodule update --init --recursive
