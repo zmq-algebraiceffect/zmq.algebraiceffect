@@ -58,7 +58,7 @@ public:
         }
     };
 
-    c74::min::message<> resume_msg{this, "resume", "Resume a pending request",
+    c74::min::message<> resume_msg{this, "resume", "Resume a pending request (final)",
         MIN_FUNCTION {
             if (args.size() < 2) {
                 m_error_out.send("usage: resume <id> <json_value>");
@@ -86,6 +86,72 @@ public:
                 c74::min::symbol(id.c_str()),
                 c74::min::symbol(json_value.c_str())
             });
+            return {};
+        }
+    };
+
+    c74::min::message<> resume_partial_msg{this, "resumepartial", "Resume with intermediate (non-final) result",
+        MIN_FUNCTION {
+            if (args.size() < 2) {
+                m_error_out.send("usage: resumepartial <id> <json_value>");
+                return {};
+            }
+            auto id = std::string(static_cast<c74::min::symbol>(args[0]).c_str());
+            auto json_value = std::string(static_cast<c74::min::symbol>(args[1]).c_str());
+
+            auto it = m_pending.find(id);
+            if (it == m_pending.end()) {
+                m_error_out.send("no pending request with id: " + id);
+                return {};
+            }
+
+            int rc = zmqae_ctx_resume_streaming(it->second, json_value.c_str(), 0); // 0 = not final
+
+            if (rc != ZMQAE_OK) {
+                m_error_out.send(std::string("resumepartial failed: ") + zmqae_last_error());
+            }
+            return {};
+        }
+    };
+
+    c74::min::message<> setparent_msg{this, "setparent", "Set parent router endpoint for forwarding",
+        MIN_FUNCTION {
+            if (args.empty()) {
+                m_error_out.send("usage: setparent <endpoint>");
+                return {};
+            }
+            if (!m_router) {
+                m_error_out.send("not connected — send 'connect' first");
+                return {};
+            }
+            auto endpoint = std::string(static_cast<c74::min::symbol>(args[0]).c_str());
+            int rc = zmqae_router_set_parent(m_router, endpoint.c_str());
+            if (rc == ZMQAE_OK) {
+                cout << "zmqae.handler: parent set to " << endpoint << c74::min::endl;
+            } else {
+                m_error_out.send(std::string("setparent failed: ") + zmqae_last_error());
+            }
+            return {};
+        }
+    };
+
+    c74::min::message<> setnested_msg{this, "setnested", "Set nested endpoint for effect composition",
+        MIN_FUNCTION {
+            if (args.empty()) {
+                m_error_out.send("usage: setnested <endpoint>");
+                return {};
+            }
+            if (!m_router) {
+                m_error_out.send("not connected — send 'connect' first");
+                return {};
+            }
+            auto endpoint = std::string(static_cast<c74::min::symbol>(args[0]).c_str());
+            int rc = zmqae_router_set_nested_endpoint(m_router, endpoint.c_str());
+            if (rc == ZMQAE_OK) {
+                cout << "zmqae.handler: nested endpoint set to " << endpoint << c74::min::endl;
+            } else {
+                m_error_out.send(std::string("setnested failed: ") + zmqae_last_error());
+            }
             return {};
         }
     };
