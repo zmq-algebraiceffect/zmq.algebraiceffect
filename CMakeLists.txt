@@ -41,9 +41,9 @@ target_include_directories(zmqae_c_api PUBLIC
     "${ZMQAE_DIR}/extern/libzmq/include"
 )
 target_link_libraries(zmqae_c_api PUBLIC libzmq-static)
-# Ensure correct __cplusplus on MSVC
+# Ensure correct __cplusplus and UTF-8 on MSVC
 if(MSVC AND MSVC_VERSION GREATER_EQUAL 1914)
-    target_compile_options(zmqae_c_api PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/Zc:__cplusplus>)
+    target_compile_options(zmqae_c_api PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/Zc:__cplusplus /utf-8>)
 endif()
 
 # --- Load zmqae_add_external() ---
