@@ -30,6 +30,17 @@ set(BUILD_SHARED OFF CACHE BOOL "" FORCE)
 set(ZMQAE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/deps/zmq-algebraiceffect")
 add_subdirectory(${ZMQAE_DIR})
 
+# Force /MT on all static libs pulled in by zmq-algebraiceffect
+if(MSVC)
+    set_property(TARGET libzmq-static PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+    if(TARGET spdlog)
+        set_property(TARGET spdlog PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+    endif()
+    if(TARGET spdlog_header_only)
+        set_property(TARGET spdlog_header_only PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+    endif()
+endif()
+
 # C API static library — links against static libzmq for self-contained Max externals
 # We bypass the zmqae INTERFACE library here because it references the shared libzmq
 # target which is incompatible with universal binary (fat) builds.
