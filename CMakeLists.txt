@@ -5,8 +5,9 @@ cmake_policy(SET CMP0091 NEW)
 if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
 endif()
+# Max externals require static CRT (/MT) on Windows
 if(MSVC)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL" CACHE STRING "" FORCE)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded" CACHE STRING "" FORCE)
 endif()
 
 project(zmq.algebraiceffect LANGUAGES C CXX)
@@ -41,9 +42,13 @@ target_include_directories(zmqae_c_api PUBLIC
     "${ZMQAE_DIR}/extern/libzmq/include"
 )
 target_link_libraries(zmqae_c_api PUBLIC libzmq-static)
-# Ensure correct __cplusplus and UTF-8 on MSVC
-if(MSVC AND MSVC_VERSION GREATER_EQUAL 1914)
-    target_compile_options(zmqae_c_api PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/Zc:__cplusplus /utf-8>)
+# Force static CRT and UTF-8 on MSVC
+if(MSVC)
+    set_property(TARGET zmqae_c_api PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+    target_compile_options(zmqae_c_api PRIVATE /utf-8)
+    if(MSVC_VERSION GREATER_EQUAL 1914)
+        target_compile_options(zmqae_c_api PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/Zc:__cplusplus>)
+    endif()
 endif()
 
 # --- Load zmqae_add_external() ---
