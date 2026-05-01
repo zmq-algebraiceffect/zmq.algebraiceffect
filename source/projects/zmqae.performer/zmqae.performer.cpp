@@ -3,14 +3,14 @@
 
 #include <string>
 
-class zmq_performer;
+class zmqae_performer;
 
 static void performer_result_cb(void* user_data,
                                 const char* id,
                                 const char* json_value,
                                 const char* error_message);
 
-class zmq_performer : public c74::min::object<zmq_performer> {
+class zmqae_performer : public c74::min::object<zmqae_performer> {
 public:
     MIN_DESCRIPTION{"Algebraic Effects performer (ZMQ DEALER client)"};
     MIN_TAGS{"network, zmq, algebraic effects"};
@@ -91,11 +91,11 @@ public:
         }
     };
 
-    zmq_performer() {
+    zmqae_performer() {
         m_init_timer.delay(0);
     }
 
-    ~zmq_performer() {
+    ~zmqae_performer() {
         do_close();
     }
 
@@ -111,7 +111,7 @@ private:
             return;
         }
         m_poll_timer.delay(10);
-        cout << "zmq.performer: connected to " << ep << c74::min::endl;
+        cout << "zmqae.performer: connected to " << ep << c74::min::endl;
     }
 
     void do_close() {
@@ -131,13 +131,13 @@ private:
     zmqae_client_t* m_client{nullptr};
 };
 
-MIN_EXTERNAL(zmq_performer);
+MIN_EXTERNAL(zmqae_performer);
 
 static void performer_result_cb(void* user_data,
                                 const char* id,
                                 const char* json_value,
                                 const char* error_message) {
-    auto* obj = static_cast<zmq_performer*>(user_data);
+    auto* obj = static_cast<zmqae_performer*>(user_data);
     if (error_message) {
         obj->m_error_out.send(std::string(error_message));
     } else if (json_value) {

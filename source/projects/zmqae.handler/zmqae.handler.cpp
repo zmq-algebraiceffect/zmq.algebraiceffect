@@ -5,11 +5,11 @@
 #include <unordered_map>
 #include <unordered_set>
 
-class zmq_handler;
+class zmqae_handler;
 
 void handler_dispatch(void* user_data, zmqae_perform_ctx_t* ctx);
 
-class zmq_handler : public c74::min::object<zmq_handler> {
+class zmqae_handler : public c74::min::object<zmqae_handler> {
 public:
     MIN_DESCRIPTION{"Algebraic Effects handler (ZMQ ROUTER)"};
     MIN_TAGS{"network, zmq, algebraic effects"};
@@ -36,7 +36,7 @@ public:
             int rc = zmqae_router_on(m_router, effect.c_str(), handler_dispatch, this);
             if (rc == ZMQAE_OK) {
                 m_registered.insert(effect);
-                cout << "zmq.handler: handler registered for " << effect << c74::min::endl;
+                cout << "zmqae.handler: handler registered for " << effect << c74::min::endl;
             } else {
                 m_error_out.send(std::string("on failed: ") + zmqae_last_error());
             }
@@ -129,11 +129,11 @@ public:
         }
     };
 
-    zmq_handler() {
+    zmqae_handler() {
         m_init_timer.delay(0);
     }
 
-    ~zmq_handler() {
+    ~zmqae_handler() {
         do_close();
     }
 
@@ -151,7 +151,7 @@ private:
             return;
         }
         m_poll_timer.delay(10);
-        cout << "zmq.handler: bound to " << ep << c74::min::endl;
+        cout << "zmqae.handler: bound to " << ep << c74::min::endl;
     }
 
     void do_close() {
@@ -179,9 +179,9 @@ private:
     std::unordered_map<std::string, zmqae_perform_ctx_t*> m_pending;
 };
 
-MIN_EXTERNAL(zmq_handler);
+MIN_EXTERNAL(zmqae_handler);
 
-void zmq_handler::on_perform(zmqae_perform_ctx_t* ctx) {
+void zmqae_handler::on_perform(zmqae_perform_ctx_t* ctx) {
     auto id = std::string(zmqae_ctx_get_id(ctx));
     auto effect = std::string(zmqae_ctx_get_effect(ctx));
     auto payload = std::string(zmqae_ctx_get_payload(ctx));
@@ -195,5 +195,5 @@ void zmq_handler::on_perform(zmqae_perform_ctx_t* ctx) {
 }
 
 void handler_dispatch(void* user_data, zmqae_perform_ctx_t* ctx) {
-    static_cast<zmq_handler*>(user_data)->on_perform(ctx);
+    static_cast<zmqae_handler*>(user_data)->on_perform(ctx);
 }

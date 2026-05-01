@@ -29,7 +29,7 @@ jobs:
       - name: Upload externals
         uses: actions/upload-artifact@v4
         with:
-          name: zmq.algebraiceffect-macos
+          name: zmqae.algebraiceffect-macos
           path: externals/
 
   build-windows:
@@ -56,5 +56,5 @@ jobs:
       - name: Upload externals
         uses: actions/upload-artifact@v4
         with:
-          name: zmq.algebraiceffect-windows
+          name: zmqae.algebraiceffect-windows
           path: externals/
