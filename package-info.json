@@ -1,0 +1,23 @@
+{
+    "title": "zmq.algebraiceffect",
+    "description": "Algebraic Effects over ZMQ for Max/MSP",
+    "author": "zmq-algebraiceffect",
+    "website": "https://github.com/zmq-algebraiceffect/zmq.algebraiceffect",
+    "extends": "",
+    "extensible": 0,
+    "homepatcher": "",
+    "max_version_min": "8.0",
+    "os": {
+        "macintosh": {
+            "externals": [
+                "externals/"
+            ]
+        },
+        "windows": {
+            "externals": [
+                "externals/"
+            ]
+        }
+    },
+    "filelist": {}
+}

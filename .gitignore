@@ -1,0 +1,17 @@
+build/
+externals/
+.DS_Store
+*.user
+.vs/
+.vscode/
+CMakeSettings.json
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+.idea/
+cmake-build-*/
