@@ -1,6 +1,6 @@
 [submodule "deps/zmq-algebraiceffect"]
 	path = deps/zmq-algebraiceffect
-	url = git@github.com:zmq-algebraiceffect/zmq-algebraiceffect.git
+	url = https://github.com/zmq-algebraiceffect/zmq-algebraiceffect.git
 [submodule "deps/min-api"]
 	path = deps/min-api
-	url = git@github.com:Cycling74/min-api.git
+	url = https://github.com/Cycling74/min-api.git
