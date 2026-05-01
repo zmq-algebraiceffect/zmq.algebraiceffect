@@ -13,9 +13,12 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Configure git for private submodules
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global url."https://github.com/".insteadOf "git@github.com:"
-          git config --global "http.${GITHUB_SERVER_URL#https://}.extraheader" "AUTHORIZATION: basic $(echo -n "x-access-token:${{ secrets.GITHUB_TOKEN }}" | base64)"
+          HEADER=$(echo -n "x-access-token:${GH_TOKEN}" | base64)
+          git config --global "http.https://github.com.extraheader" "AUTHORIZATION: basic ${HEADER}"
 
       - name: Checkout submodules
         run: git submodule update --init --recursive
