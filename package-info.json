@@ -2,7 +2,7 @@
     "title": "zmqae.max",
     "description": "Algebraic Effects over ZMQ for Max/MSP",
     "author": "zmq-algebraiceffect",
-    "website": "https://github.com/zmq-algebraiceffect/zmqae.max",
+    "website": "https://github.com/zmqae/zmqae.max",
     "extends": "",
     "extensible": 0,
     "homepatcher": "",
