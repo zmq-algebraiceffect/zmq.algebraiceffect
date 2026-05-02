@@ -1,8 +1,8 @@
 {
-    "title": "zmq.algebraiceffect",
+    "title": "zmqae.max",
     "description": "Algebraic Effects over ZMQ for Max/MSP",
     "author": "zmq-algebraiceffect",
-    "website": "https://github.com/zmq-algebraiceffect/zmq.algebraiceffect",
+    "website": "https://github.com/zmq-algebraiceffect/zmqae.max",
     "extends": "",
     "extensible": 0,
     "homepatcher": "",
@@ -11,13 +11,24 @@
         "macintosh": {
             "externals": [
                 "externals/"
+            ],
+            "help": [
+                "help/"
             ]
         },
         "windows": {
             "externals": [
                 "externals/"
+            ],
+            "help": [
+                "help/"
             ]
         }
     },
-    "filelist": {}
+    "filelist": {
+        "externals/zmqae.performer.mxo": {},
+        "externals/zmqae.handler.mxo": {},
+        "help/zmqae.performer.maxhelp": {},
+        "help/zmqae.handler.maxhelp": {}
+    }
 }
